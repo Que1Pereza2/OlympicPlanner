@@ -1,11 +1,6 @@
-/*
- * 
- * 
- * 
- */
 package olympic.committee.events.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,35 +13,37 @@ import jakarta.persistence.Table;
 import java.util.List;
 
 /**
- *
+ * This is the model class for Users.
  * @author Baljeet
  */
 
+//Anotations needed for springboot and Hibernate to recognize the class appropiately.
 @Entity
 @Table(name = "Users")
 public class Users {
-   
+//   The User's ID.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column( name = "id")
     private Long id;
     
+//    The User's name.
     @Column(nullable = false)
     private String name;
-    
+//    The user's email
     @Column()
     private String email;
     
-    
-//    one user can go  to many sportingEvents.
-    @JsonIgnoreProperties("events")
-    @ManyToMany
+//    Events to which the user subscribed.
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "eventParticipants"
             ,joinColumns = @JoinColumn(name = "idUser", referencedColumnName = "id")
             ,inverseJoinColumns = @JoinColumn(name = "idEvent", referencedColumnName = "id")
     )
     private List<SportingEvents> events;
+    
+//    Getters and Setters.
     
     public Long getId() {
         return id;

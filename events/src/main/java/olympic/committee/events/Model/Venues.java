@@ -1,11 +1,5 @@
-/*
- * 
- * 
- * 
- */
 package olympic.committee.events.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,44 +10,47 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * This is the model class for Venues.
  * @author Baljeet
  */
 
+//Anotations needed for springboot and Hibernate to recognize the class appropiately.
 @Entity
 @Table(name = "Venues")
 public class Venues {
     
+    //    ID of reservation.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    
+//    The venue's name.
     @Column(nullable = false)
     private String name;
 
+//    The type of venue this is.
     @Column()
-    private String venueType; // ask about this later
+    private String venueType;
     
+//    Where the venue is located.
     @Column()
     private String location;
 
+//    The reservations for this venue.
     @JsonIgnoreProperties("venues")
     @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Reservations> reservations;
-//    one venue can have many reservations
 
+//    Constructor
     public Venues(){
     
     }
 
 //    Getters and Setters
-    
-    
+
     public Long getId() {
         return id;
     }
@@ -94,15 +91,13 @@ public class Venues {
         this.reservations = reservations;
     }
     
+//    Method that removes a reservation from the list.
     public void removeReservation(Long idReservation){
-        List<Reservations> reservationsCopy = new ArrayList<>();
-        reservationsCopy.addAll(this.reservations);
-        
-        for(Reservations reservation : reservationsCopy)
-            if(reservation.getId().equals(idReservation)){
-                this.reservations.remove(reservation);
-                break;
-            }
+        for (Reservations reservation : this.reservations) {
+           if (reservation.getId().equals(idReservation)) {
+               this.reservations.remove(reservation);
+               break;
+           }
+       }
     }
-
 }

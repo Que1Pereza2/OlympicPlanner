@@ -10,7 +10,7 @@ import olympic.committee.events.Model.Venues;
 
 
 /**
- *
+ *  The Service interface for Venues.
  * @author Baljeet
  */
 public interface VenuesService {

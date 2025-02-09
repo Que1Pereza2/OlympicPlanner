@@ -10,7 +10,7 @@ import olympic.committee.events.Model.Users;
 
 
 /**
- *
+ *  The Service interface for Users.
  * @author Baljeet
  */
 public interface UserService {

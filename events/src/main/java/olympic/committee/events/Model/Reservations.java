@@ -1,11 +1,6 @@
-/*
- * 
- * 
- * 
- */
 package olympic.committee.events.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+//imports
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,37 +11,44 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.sql.Time;
 import java.sql.Date;
 
 /**
- *
+ *  This is the model class for Reservations.
  * @author Baljeet
  */
 
+//Anotations needed for springboot and Hibernate to recognize the class appropiately.
 @Entity
 @Table(name = "Reservations")
 public class Reservations {
     
+//    ID of reservation.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column( name = "id")
     private Long id;
     
+//    Date for the reservation.
     @Column(nullable = false)
     private Date date;
     
+//    How long will the reservation last.
     @Column(nullable = false)
     private Time HourInterval;
     
+//    The event for which the reservation is for.
     @JsonIgnoreProperties("reservation")
-    @OneToOne()
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "idEvent", referencedColumnName = "id")
     private SportingEvents event;
-//    one event has one reservation.
     
+//    The venue for which the reservation is for.
     @JsonIgnoreProperties("reservations")
-    @ManyToOne()
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.DETACH})
     @JoinColumn(name = "venue" )
     private Venues venue;
     
@@ -96,5 +98,4 @@ public class Reservations {
     public void removeVenue(){
         this.venue = null;
     }
-    
 }

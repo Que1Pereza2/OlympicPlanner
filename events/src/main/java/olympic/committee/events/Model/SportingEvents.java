@@ -1,18 +1,12 @@
-/*
- * 
- * 
- * 
- */
 package olympic.committee.events.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -21,7 +15,7 @@ import java.sql.Time;
 import java.util.List;
 
 /**
- *
+ *  Model class for SportingEvents.
  * @author Baljeet
  */
 
@@ -49,12 +43,13 @@ public class SportingEvents {
     @Column(nullable = false)
     private Long duration;
     
-    @ManyToMany( mappedBy = "events")
+    @JsonIgnoreProperties("events")
+    @ManyToMany( mappedBy = "events",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Users> users;
 //    One event has many participants.
     
     @JsonIgnoreProperties("reservation")
-    @OneToOne(mappedBy = "event")
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private Reservations reservation;
     
     public SportingEvents(){}

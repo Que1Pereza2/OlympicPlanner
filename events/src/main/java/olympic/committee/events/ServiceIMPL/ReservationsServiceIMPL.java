@@ -1,11 +1,5 @@
-/*
- * 
- * 
- * 
- */
 package olympic.committee.events.ServiceIMPL;
 
-import java.util.ArrayList;
 import java.util.List;
 import olympic.committee.events.Model.Reservations;
 import olympic.committee.events.Model.SportingEvents;
@@ -18,23 +12,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
+ *  This is the implementation class for the ReservationsService class.
  * @author Baljeet
  */
 @Service
 public class ReservationsServiceIMPL implements ReservationsService{
 
+//    We declare the repositories so we can use them.
     @Autowired
     private final ReservationsRepository repository;
     private final SportingEventsRepository sportRepository;
     private final VenuesRepository venueRepository;
     
+/**
+ * The constructor for the class where we instantiate the declared repositories.
+ * @param repository ReservationsRepository.
+ * @param sportRepository SportingEventsRepository.
+ * @param venueRepository  VenuesRepository.
+ */
     public ReservationsServiceIMPL(ReservationsRepository repository, SportingEventsRepository sportRepository, VenuesRepository venueRepository){
         this.repository = repository;
         this.sportRepository = sportRepository;
         this.venueRepository = venueRepository;
     }
     
+    /**
+     * The method that creates a new reservation.
+     * @param eventId - The ID of the event .
+     * @param venueId - The ID of the venue.
+     * @param reservationToCreate - The reservation that will be inserted in the database.
+     * @return The created reservation.
+     */
     @Override
     public Reservations createReservation(Long eventId, Long venueId, Reservations reservationToCreate){
         
@@ -43,37 +51,38 @@ public class ReservationsServiceIMPL implements ReservationsService{
         reservationToCreate.setEvent(event);
         reservationToCreate.setVenue(venue);
         
-//        reservationToCreate.setEvent(sportRepository.findById(reservationToCreate.getEvent()).get());
         return repository.save(reservationToCreate);
-//        return null;
     }
 
+    /**
+     * This method deletes all the reservations made to a specific venue.
+     * @param venueId - The id of the venue that needs it's reservations deleted.
+     * @return a string indication success.
+     */
     @Override
     public String deleteReservationByVenue(Long venueId) {
         List<Reservations> reservations = repository.findAll();
-        
         
         int size = reservations.size();
         System.out.println(size);
         
         for(int i=0; i < size; i++)
             if(reservations.get(i).getVenue().equals(venueRepository.findById(venueId).get())){
-                System.out.println("getsHere");
                 deleteReservation(reservations.get(i).getId());
-//                reservationsToDelete.add(reservations.get(i));
-//                repository.deleteById(reservations.get(i).getId());
                 repository.delete(reservations.get(i));
-//                repository.flush();
-                System.out.println("flushes");
             }
         
         return "Objects deleted successfully!";
     }
 
+    /**
+     * This method deletes a reservation.
+     * @param id - ID of the reservation that has to be deleted.
+     * @return a String if the reservation has been deleted successfully.
+     */
     @Override
     public String deleteReservation(Long id) {
         Reservations reservationToDelete = repository.findById(id).get();
-//        Reservations reservationToReturn = new Reservations();
         reservationToDelete.getEvent().removeReservation();
         reservationToDelete.getVenue().removeReservation(id);
         repository.delete(repository.findById(id).get());
